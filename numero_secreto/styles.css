@@ -1,0 +1,14 @@
+#content{
+    font-family: "Nunito", serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+    position: relative;
+}
+img{
+    width: 40px;
+    text-align: right;
+    position: absolute;
+    top: 3px;
+    right: 310px
+}
