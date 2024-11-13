@@ -17,6 +17,7 @@ video{
   left: 8px;
   bottom: 10px;
   background-color: transparent;
+  color: #7289da;
 }
 .text-mute{
   display: inline;
@@ -41,6 +42,7 @@ video{
 .icono{
   width: 35px;
   height: 35px;
+  border-radius: 5%;
 }
 .icono:hover{
   transform: scale(1.1);
@@ -71,10 +73,11 @@ video{
   align-items: center; 
   color: rgb(181, 1, 88);
   background-color: #7289da;
+  opacity: .9;
   width: 500px;
-  height: 400px;
+  height: 300px;
   border-radius: 8px;
-  bottom: 28%;
+  bottom: 35%;
   left: 37%; 
   display: none;
 }
