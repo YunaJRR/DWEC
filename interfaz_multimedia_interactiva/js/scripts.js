@@ -29,26 +29,27 @@ document.addEventListener("DOMContentLoaded", (ev) => {
     const songs = ['darkside', 'kool', '1x1'];
 
     // Al clicar en el logo inicar la página
+
     displayLogo.onclick = startPage;
+    document.getElementById('Space').onclick = function() {audioMute(song, source, currentlyPlaying)};
+    document.getElementById('ArrowUp').onclick = function(){changeVolume(song, true)};
+    document.getElementById('ArrowDown').onclick = function(){changeVolume(song, false)};
+    document.getElementById('ArrowRight').onclick = function(){song = changeSong(song, source, 'right')};
+    document.getElementById('ArrowLeft').onclick = function(){song = changeSong(song, source, 'left')};
+    
 
     // Evento al presionar teclas
     document.body.addEventListener("keydown", (ev) => {
         transformImg(ev.code, false); 
         // Manejo de la tecla de espacio para mutear/desmutear
-        if (ev.code === "Space" && currentlyPlaying) {
-            textMute.textContent = " UNMUTE";
+        if (ev.code === "Space") {
             audioMute(song, source, currentlyPlaying);
-            currentlyPlaying = false;
-        } else if (ev.code === "Space" && !currentlyPlaying) {
-            textMute.textContent = " MUTE";
-            audioMute(song, source, currentlyPlaying);
-            currentlyPlaying = true;
-        } 
+        }
         // Control de volumen con flechas arriba y abajo
-        else if (ev.code === 'ArrowDown' && darksideAudio.volume >= 0.2) {
-            darksideAudio.volume -= 0.2; 
-        } else if (ev.code === 'ArrowUp' && darksideAudio.volume < 1) {
-            darksideAudio.volume += 0.2; 
+        else if (ev.code === 'ArrowUp') {
+            changeVolume(song, true);
+        } else if (ev.code === 'ArrowDown') {
+            changeVolume(song, false);
         } 
         // Cambia de canción con flechas derecha e izquierda
         else if (ev.code === 'ArrowRight') {
@@ -84,11 +85,51 @@ document.addEventListener("DOMContentLoaded", (ev) => {
                 break;
         }
     }
+    function changeVolume(currentSong, plus) {
+        switch (currentSong) {
+            case 0:
+                if (darksideAudio.volume >= 0 && darksideAudio.volume <= 1) {
+                    if (plus) {
+                        darksideAudio.volume = Math.min(darksideAudio.volume + 0.2, 1); // Ensure volume does not exceed 1
+                    } else {
+                        darksideAudio.volume = Math.max(darksideAudio.volume - 0.2, 0); // Ensure volume does not fall below 0
+                    }
+                }
+                break;
+            case 1:
+                if (koolAudio.volume >= 0 && koolAudio.volume <= 1) {
+                    if (plus) {
+                        koolAudio.volume = Math.min(koolAudio.volume + 0.2, 1);
+                    } else {
+                        koolAudio.volume = Math.max(koolAudio.volume - 0.2, 0);
+                    }
+                }
+                break;
+            case 2:
+                if (x1Audio.volume >= 0 && x1Audio.volume <= 1) {
+                    if (plus) {
+                        x1Audio.volume = Math.min(x1Audio.volume + 0.2, 1);
+                    } else {
+                        x1Audio.volume = Math.max(x1Audio.volume - 0.2, 0);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     // Función para mutear o desmutear la canción actual
     function audioMute(currentSong, source, muted) {
         let songName = songs[currentSong]; 
         source.src = songName.concat('.mp4'); 
+        if (muted){
+            textMute.textContent = " UNMUTE";
+            currentlyPlaying = false;
+        }else{
+            textMute.textContent = " MUTE";
+            currentlyPlaying = true;
+        }
         // Establece el estado de muteo para el audio correspondiente
         switch (currentSong) {
             case 0:
