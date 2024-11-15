@@ -29,6 +29,14 @@ document.addEventListener('DOMContentLoaded', function () {
             this.saveTaskAtCookies(newTask); 
             return newTask; 
         }
+        //Método para editar tareas
+        updateTask(task){
+            const taskToEdit = this.getTask(task.id);
+            taskToEdit.description = task.description;
+            this.saveTaskAtCookies(taskToEdit);
+
+            
+        }
         // Método para guardar tareas en las cookies 
         saveTaskAtCookies(task) {
             document.cookie = `${task.id}=${task.description}; path=/;`;
@@ -38,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.cookie = task.id + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'; // Deletes the task cookie
             this.tasks = this.tasks.filter(t => t.id !== task.id); 
         }
-        // Método para obtener una tarea por su ID
+        // Método para obtener una tarea por su ID usando Arr.find
         getTask(id) {
             return this.tasks.find(t => t.id === id); 
         }
@@ -74,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 const taskToEdit = taskManager.getTask(currentTaskId); 
                 taskToEdit.description = taskDescription; 
+                taskManager.updateTask(taskToEdit);
                 updateRow(taskToEdit); 
             }
             const modal = bootstrap.Modal.getInstance(document.getElementById('modal')); 
@@ -98,16 +107,17 @@ document.addEventListener('DOMContentLoaded', function () {
         editButton.textContent = 'Editar'; 
 
         // Creación del botón de editar 
-        editButton.addEventListener('click', () => {
-            deletingTask = false;
-            modalTitle.textContent = 'Editar Tarea'; 
-            descriptionInput.value = task.description; 
-            currentTaskId = task.id; 
-            resetModal("Editar Tarea", "Editar", "btn-primary"); // Reset modal for editing
-            document.getElementById('p-delete').style.display = 'none';
-            document.getElementById('modal-description').style.display = 'block';
-            const modal = new bootstrap.Modal(document.getElementById('modal')); 
-            modal.show(); 
+        editButton.addEventListener('click', () => { 
+            deletingTask = false; 
+            modalTitle.textContent = 'Editar Tarea';  
+            const taskToEdit = taskManager.getTask(task.id); // Get the latest task details
+            descriptionInput.value = taskToEdit.description;  
+            currentTaskId = task.id;  
+            resetModal("Editar Tarea", "Editar", "btn-primary"); 
+            document.getElementById('p-delete').style.display = 'none'; 
+            document.getElementById('modal-description').style.display = 'block'; 
+            const modal = new bootstrap.Modal(document.getElementById('modal'));  
+            modal.show();  
         });
 
         // Creación del botón de eliminar
@@ -156,22 +166,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Función para cargar tareas desde las cookies 
-    function loadCookies() {
-        const cDecoded = decodeURIComponent(document.cookie); 
-        const cArray = cDecoded.split("; "); 
-        let maxId = 0; 
-        cArray.forEach(element => {
-            const [id, description] = element.split("="); 
-            if (id && description) {
-                const taskId = parseInt(id); 
-                taskManager.tasks.push(new Task(taskId, description)); 
-                addRow(new Task(taskId, description));
-                if (taskId > maxId) {
-                    maxId = taskId;
-                }
-            }
+    function loadCookies() { 
+        const cDecoded = decodeURIComponent(document.cookie);  
+        const cArray = cDecoded.split("; ");  
+        let maxId = 0;  
+        cArray.forEach(element => { 
+            const [id, description] = element.split("=");  
+            if (id && description) { 
+                const taskId = parseInt(id);  
+                taskManager.tasks.push(new Task(taskId, description));  
+                if (taskId > maxId) { 
+                    maxId = taskId; 
+                } 
+            } 
+        }); 
+        taskManager.idCounter = maxId + 1; 
+        // Para ordenar las tareas por id usamos el método Arr.sort
+        taskManager.tasks.sort((a, b) => a.id-b.id);
+        taskManager.tasks.forEach(task => {
+            addRow(task)
         });
-        taskManager.idCounter = maxId + 1;
     }
 
     // Resetear el modal
