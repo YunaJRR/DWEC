@@ -29,14 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
             this.saveTaskAtCookies(newTask); 
             return newTask; 
         }
-        //Método para editar tareas
-        updateTask(task){
-            const taskToEdit = this.getTask(task.id);
-            taskToEdit.description = task.description;
-            this.saveTaskAtCookies(taskToEdit);
-
-            
-        }
         // Método para guardar tareas en las cookies 
         saveTaskAtCookies(task) {
             document.cookie = `${task.id}=${task.description}; path=/;`;
@@ -79,10 +71,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (currentTaskId === null) {
                 const newTask = taskManager.createTask(taskDescription); 
                 addRow(newTask); 
+                console.log("adios");
+                
             } else {
                 const taskToEdit = taskManager.getTask(currentTaskId); 
                 taskToEdit.description = taskDescription; 
-                taskManager.updateTask(taskToEdit);
+                taskManager.saveTaskAtCookies(taskToEdit);
                 updateRow(taskToEdit); 
             }
             const modal = bootstrap.Modal.getInstance(document.getElementById('modal')); 
@@ -107,17 +101,23 @@ document.addEventListener('DOMContentLoaded', function () {
         editButton.textContent = 'Editar'; 
 
         // Creación del botón de editar 
-        editButton.addEventListener('click', () => { 
-            deletingTask = false; 
-            modalTitle.textContent = 'Editar Tarea';  
-            const taskToEdit = taskManager.getTask(task.id); // Get the latest task details
-            descriptionInput.value = taskToEdit.description;  
-            currentTaskId = task.id;  
-            resetModal("Editar Tarea", "Editar", "btn-primary"); 
-            document.getElementById('p-delete').style.display = 'none'; 
-            document.getElementById('modal-description').style.display = 'block'; 
-            const modal = new bootstrap.Modal(document.getElementById('modal'));  
-            modal.show();  
+        editButton.addEventListener('click', () => {
+            if (!validateTasks()) {
+                return;
+            }
+            const taskToEdit = taskManager.getTask(task.id);
+            if (taskToEdit) {
+                modalTitle.textContent = 'Edit Task';
+                descriptionInput.value = taskToEdit.description;
+                currentTaskId = task.id;
+                resetModal("Edit Task", "Edit", "btn-primary");
+                document.getElementById('p-delete').style.display = 'none';
+                document.getElementById('modal-description').style.display = 'block';
+                const modal = new bootstrap.Modal(document.getElementById('modal'));
+                modal.show();
+            } else {
+                alert(`No task found with ID ${task.id}`);
+            }
         });
 
         // Creación del botón de eliminar
@@ -128,25 +128,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Evento para el botón de eliminar 
         deleteButton.addEventListener('click', () => {
-            deletingTask = true;
-            const modalDeleteText = document.getElementById('p-delete');
-            modalDeleteText.textContent = `¿Estás seguro de que deseas eliminar la tarea con ID: ${task.id}?`; 
-            document.getElementById('modal-description').style.display = 'none';
-            document.getElementById('p-delete').style.display = 'block';
-            modalTitle.textContent = 'Confirmar Eliminación';
-            resetModal("Confirmar Eliminación", "Eliminar", "btn-danger"); 
-            currentTaskId = task.id; 
-            if (deletingTask){
-                saveButton.onclick = function () {
-                    taskManager.deleteTask(task); 
-                    row.remove(); 
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modal')); 
-                    modal.hide(); 
-                };
+            if (!validateTasks()) {
+                return; 
             }
-            
-            const modal = new bootstrap.Modal(document.getElementById('modal'));
-            modal.show(); 
+            const taskToDelete = taskManager.getTask(task.id);
+            if (taskToDelete) {
+                const modalDeleteText = document.getElementById('p-delete');
+                modalDeleteText.textContent = `Confirmar eliminación de la tarea con ID: ${task.id}`;
+                document.getElementById('modal-description').style.display = 'none';
+                document.getElementById('p-delete').style.display = 'block';
+                modalTitle.textContent = 'Confirm Deletion';
+                resetModal("Confirm Deletion", "Delete", "btn-danger");
+                currentTaskId = task.id;
+                saveButton.onclick = function () {
+                    taskManager.deleteTask(taskToDelete);
+                    row.remove();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modal'));
+                    modal.hide();
+                };
+                const modal = new bootstrap.Modal(document.getElementById('modal'));
+                modal.show();
+            } else {
+                alert(`No task found with ID ${task.id}`);
+            }
         });
 
         tdActions.appendChild(editButton);
@@ -194,7 +198,26 @@ document.addEventListener('DOMContentLoaded', function () {
         saveButton.textContent = buttonText;
         saveButton.className = `btn ${buttonClass}`;
     }
-
+    // Validación de las ids de las tareas
+    function validateTasks() {
+        const rows = tableBody.getElementsByTagName('tr');
+        const taskIds = taskManager.tasks.map(task => task.id);
+        const seenIds = new Set();
+        // Si para alguna fila la ID ha sido alterada o ha habido algún error externo, se impedirá el acceso a las acciones devolviendo un mensaje de error
+        for (let row of rows) {
+            const rowId = parseInt(row.id); 
+            if (seenIds.has(rowId)) {
+                alert(`ID duplicada: ${rowId}. Asegurese de que todas las IDs son únicas.`);
+                return false;
+            }
+            seenIds.add(rowId);
+            if (!taskIds.includes(rowId)) {
+                alert(`Hay un fallo con el elemento con ID: ${rowId}. Ninguna tarea coincide con esta ID.`);
+                return false;
+            }
+        }
+        return true;
+    }
     // Carga las tareas cuando se inicia el script 
     loadCookies(); 
 });
