@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
         set description(newDescription) {
             this._description = newDescription; 
         }
+        set id(newId) {
+            this._id = newId; 
+        }
         get id() {
             return this._id; 
         }
