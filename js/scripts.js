@@ -84,6 +84,11 @@ addEventListener("DOMContentLoaded", (event) => {
         añadirCliente();
     });
 
+    const btnAñadirViaje = document.getElementById("btn-añadir-viaje");
+    btnAñadirViaje.addEventListener("click", (event) => {
+        añadirViaje();
+    });
+
     function añadirCliente() {
         const clienteNombre = document.getElementById("cliente-nombre").value;
         const clienteApellidos = document.getElementById("cliente-apellidos").value;
@@ -94,7 +99,7 @@ addEventListener("DOMContentLoaded", (event) => {
         const nuevoCliente = new Cliente(`${clienteNombre}`, `${clienteApellidos}`, `${clienteEmail}`, `${clienteTelefono}`);
 
         const nuevaFilaCliente = document.createElement("tr");
-        nuevaFilaCliente.innerHTML = `<td>${nuevoCliente.nombre}</td>
+        nuevaFilaCliente.innerHTML = `<td class='td-cliente-nombre'>${nuevoCliente.nombre}</td>
         <td>${nuevoCliente.apellido}</td>
         <td>${nuevoCliente.email}</td>
         <td>${nuevoCliente.telefono}</td>
@@ -108,12 +113,10 @@ addEventListener("DOMContentLoaded", (event) => {
         document.getElementById("cliente-apellidos").value = '';
         document.getElementById("cliente-email").value = '';
         document.getElementById("cliente-telefono").value = '';
+
+        reservaSelector();
     }
 
-    const btnAñadirViaje = document.getElementById("btn-añadir-viaje");
-    btnAñadirViaje.addEventListener("click", (event) => {
-        añadirViaje();
-    });
 
     function añadirViaje() {
         const viajesCodigo = document.getElementById("viajes-codigo").value;
@@ -142,5 +145,26 @@ addEventListener("DOMContentLoaded", (event) => {
         document.getElementById("sel-viajes-tipo").value = '';
     }
 
+    function añadirReserva(){
 
+    }
+
+    function reservaSelector() {
+        const selector = document.getElementById('sel-clientes');
+        selector.innerHTML = ''; 
+        const opcionPredeterminada = new Option('Seleccionar Cliente');
+        selector.add(opcionPredeterminada);
+        const tablaClientes = document.getElementById("tabla-clientes");
+        const filas = tablaClientes.getElementsByTagName("tr");
+    
+        for (let i = 0; i < filas.length; i++) {
+            const nombresClientes = filas[i].getElementsByTagName("td");
+            if (nombresClientes.length > 0) {
+                const nombre = nombresClientes[0].innerText;
+                const apellido = nombresClientes[1].innerText;
+                const opcion = new Option(`${nombre} ${apellido}`, `${nombre} ${apellido}`);
+                selector.add(opcion);
+            }
+        }
+    }
 });
