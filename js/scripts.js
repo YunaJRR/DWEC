@@ -100,7 +100,7 @@ addEventListener("DOMContentLoaded", (event) => {
 
     function cargarLocalStorage() {
         // Aquí cargamos el LocalStorage como un JSON y con un forEach recorremos cada instancia y la introducimos en su tabla
-        const clientes = JSON.parse(localStorage.getItem('clientes'));
+        let clientes = JSON.parse(localStorage.getItem('clientes'));
         if (clientes === null){
             clientes = [];
         }
@@ -118,7 +118,7 @@ addEventListener("DOMContentLoaded", (event) => {
             tablaClientes.appendChild(nuevaFilaCliente);
         });
 
-        const viajes = JSON.parse(localStorage.getItem('viajes'));
+        let viajes = JSON.parse(localStorage.getItem('viajes'));
         if (viajes === null){
             viajes = [];
         }
@@ -136,7 +136,7 @@ addEventListener("DOMContentLoaded", (event) => {
             tablaViajes.appendChild(nuevaFilaViaje);
         });
 
-        const reservas = JSON.parse(localStorage.getItem('reservas'));
+        let reservas = JSON.parse(localStorage.getItem('reservas'));
         if (reservas === null){
             reservas = [];
         }
@@ -158,7 +158,30 @@ addEventListener("DOMContentLoaded", (event) => {
         const clienteApellidos = document.getElementById("cliente-apellidos").value;
         const clienteEmail = document.getElementById("cliente-email").value;
         const clienteTelefono = document.getElementById("cliente-telefono").value;
-
+        let mensajeErrorCliente = 'Los siguientes campos no pueden estar vacíos: ';
+        let camposInsuficientesCliente = false;
+        if (clienteNombre == ''){
+            mensajeErrorCliente += "Nombre. ";
+            camposInsuficientesCliente = true;
+        }
+        if (clienteApellidos == ''){
+            mensajeErrorCliente += "Apellidos. ";
+            camposInsuficientesCliente = true;
+        }
+        if (clienteEmail == ''){
+            mensajeErrorCliente += "Email. ";
+            camposInsuficientesCliente = true;
+        }
+        if (clienteTelefono == ''){
+            mensajeErrorCliente += "Teléfono. ";
+            camposInsuficientesCliente = true;
+        }
+        if (camposInsuficientesCliente){
+            alert(mensajeErrorCliente);
+            return; 
+        }
+        console.log(clienteApellidos);
+         clienteApellidos;
         const nuevoCliente = new Cliente(clienteNombre, clienteApellidos, clienteEmail, clienteTelefono);
         const tablaClientes = document.getElementById("tabla-clientes");
         
@@ -190,6 +213,29 @@ addEventListener("DOMContentLoaded", (event) => {
         const selViajesTipo = document.getElementById("sel-viajes-tipo");
         const optViajesTipo = selViajesTipo.options[selViajesTipo.selectedIndex].text;
 
+        let mensajeErrorViaje = 'Los siguientes campos no pueden estar vacíos: ';
+        let camposInsuficientesViaje = false;
+        if (viajesCodigo == ''){
+            mensajeErrorViaje += "Código. ";
+            camposInsuficientesViaje = true;
+        }
+        if (viajesDestino == ''){
+            mensajeErrorViaje += "Destino. ";
+            camposInsuficientesViaje = true;
+        }
+        if (viajesPrecio == ''){
+            mensajeErrorViaje += "Precio. ";
+            camposInsuficientesViaje = true;
+        }
+        if (optViajesTipo == 'Tipos de viajes'){
+            mensajeErrorViaje += "Tipo. ";
+            camposInsuficientesViaje = true;
+        }
+        if (camposInsuficientesViaje){
+            alert(mensajeErrorViaje);
+            return; 
+        }
+
         const nuevoViaje = new Viaje(viajesCodigo, viajesDestino, viajesPrecio, optViajesTipo);
         const tablaViajes = document.getElementById("tabla-viajes");
         
@@ -219,6 +265,21 @@ addEventListener("DOMContentLoaded", (event) => {
         const optReservaCliente = selReservaCliente.options[selReservaCliente.selectedIndex].text;
         const selReservaViaje = document.getElementById("sel-reserva-viaje");
         const optReservaViaje = selReservaViaje.options[selReservaViaje.selectedIndex].text;
+
+        let mensajeErrorReserva = 'Falta por seleccionar: ';
+        let camposInsuficientesReserva = false;
+        if (optReservaCliente == 'Seleccionar Cliente'){
+            mensajeErrorReserva += "Cliente. ";
+            camposInsuficientesReserva = true;
+        }
+        if (optReservaViaje == 'Seleccionar Viaje'){
+            mensajeErrorReserva += "Reserva. ";
+            camposInsuficientesReserva = true;
+        }
+        if (camposInsuficientesReserva){
+            alert(mensajeErrorReserva);
+            return; 
+        }
 
         const nuevaReserva = new Reserva(optReservaCliente, optReservaViaje);
         const tablaReservas = document.getElementById("tabla-reservas");
