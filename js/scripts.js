@@ -1,4 +1,4 @@
-addEventListener("DOMContentLoaded", (event) => {
+addEventListener('DOMContentLoaded', (event) => {
     class Viaje {
         constructor(codigo, destino, precio, disponibilidad = true) {
             this.codigo = codigo;
@@ -83,18 +83,18 @@ addEventListener("DOMContentLoaded", (event) => {
     actualizarSelectorCliente();
     actualizarSelectorViaje();
 
-    const btnAñadirCliente = document.getElementById("btn-añadir-cliente");
-    btnAñadirCliente.addEventListener("click", (event) => {
+    const btnAñadirCliente = document.getElementById('btn-añadir-cliente');
+    btnAñadirCliente.addEventListener('click', (event) => {
         añadirCliente();
     });
 
-    const btnAñadirViaje = document.getElementById("btn-añadir-viaje");
-    btnAñadirViaje.addEventListener("click", (event) => {
+    const btnAñadirViaje = document.getElementById('btn-añadir-viaje');
+    btnAñadirViaje.addEventListener('click', (event) => {
         añadirViaje();
     });
 
-    const btnAñadirReserva = document.getElementById("btn-añadir-reserva");
-    btnAñadirReserva.addEventListener("click", (event) => {
+    const btnAñadirReserva = document.getElementById('btn-añadir-reserva');
+    btnAñadirReserva.addEventListener('click', (event) => {
         añadirReserva();
     });
 
@@ -104,16 +104,16 @@ addEventListener("DOMContentLoaded", (event) => {
         if (clientes === null){
             clientes = [];
         }
-        const tablaClientes = document.getElementById("tabla-clientes");
+        const tablaClientes = document.getElementById('tabla-clientes');
         tablaClientes.innerHTML = '';
         clientes.forEach(cliente => {
-            const nuevaFilaCliente = document.createElement("tr");
+            const nuevaFilaCliente = document.createElement('tr');
             nuevaFilaCliente.innerHTML = `<td class='td-cliente-nombre'>${cliente.nombre}</td>
             <td>${cliente.apellido}</td>
             <td>${cliente.email}</td>
             <td>${cliente.telefono}</td>
             <td>
-                <button class="btn btn-danger btn-sm" onclick="eliminarCliente('${cliente.nombre}', '${cliente.apellido}')">Eliminar</button>
+                <button class='btn btn-danger btn-sm' onclick="eliminarCliente('${cliente.nombre}', '${cliente.apellido}')">Eliminar</button>
             </td>`;
             tablaClientes.appendChild(nuevaFilaCliente);
         });
@@ -122,16 +122,16 @@ addEventListener("DOMContentLoaded", (event) => {
         if (viajes === null){
             viajes = [];
         }
-        const tablaViajes = document.getElementById("tabla-viajes");
+        const tablaViajes = document.getElementById('tabla-viajes');
         tablaViajes.innerHTML = '';
         viajes.forEach(viaje => {
-            const nuevaFilaViaje = document.createElement("tr");
+            const nuevaFilaViaje = document.createElement('tr');
             nuevaFilaViaje.innerHTML = `<td>${viaje.codigo}</td>
             <td>${viaje.destino}</td>
             <td>${viaje.precio}</td>
             <td>${viaje.disponibilidad}</td>
             <td>
-                <button class="btn btn-danger btn-sm" onclick="eliminarViaje('${viaje.codigo}')">Eliminar</button>
+                <button class='btn btn-danger btn-sm' onclick="eliminarViaje('${viaje.codigo}')">Eliminar</button>
             </td>`;
             tablaViajes.appendChild(nuevaFilaViaje);
         });
@@ -140,40 +140,40 @@ addEventListener("DOMContentLoaded", (event) => {
         if (reservas === null){
             reservas = [];
         }
-        const tablaReservas = document.getElementById("tabla-reservas");
+        const tablaReservas = document.getElementById('tabla-reservas');
         tablaReservas.innerHTML = '';
         reservas.forEach(reserva => {
-            const nuevaFilaReserva = document.createElement("tr");
+            const nuevaFilaReserva = document.createElement('tr');
             nuevaFilaReserva.innerHTML = `<td>${reserva.cliente}</td>
             <td>${reserva.viaje}</td>
             <td>
-                <button class="btn btn-danger btn-sm" onclick="eliminarReserva('${reserva.cliente}', '${reserva.viaje}')">Eliminar</button>
+                <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${reserva.cliente}', '${reserva.viaje}')">Eliminar</button>
             </td>`;
             tablaReservas.appendChild(nuevaFilaReserva);
         });
     }
 
     function añadirCliente() {
-        const clienteNombre = document.getElementById("cliente-nombre").value;
-        const clienteApellidos = document.getElementById("cliente-apellidos").value;
-        const clienteEmail = document.getElementById("cliente-email").value;
-        const clienteTelefono = document.getElementById("cliente-telefono").value;
+        const clienteNombre = document.getElementById('cliente-nombre').value;
+        const clienteApellidos = document.getElementById('cliente-apellidos').value;
+        const clienteEmail = document.getElementById('cliente-email').value;
+        const clienteTelefono = document.getElementById('cliente-telefono').value;
         let mensajeErrorCliente = 'Los siguientes campos no pueden estar vacíos: ';
         let camposInsuficientesCliente = false;
         if (clienteNombre == ''){
-            mensajeErrorCliente += "Nombre. ";
+            mensajeErrorCliente += 'Nombre. ';
             camposInsuficientesCliente = true;
         }
         if (clienteApellidos == ''){
-            mensajeErrorCliente += "Apellidos. ";
+            mensajeErrorCliente += 'Apellidos. ';
             camposInsuficientesCliente = true;
         }
         if (clienteEmail == ''){
-            mensajeErrorCliente += "Email. ";
+            mensajeErrorCliente += 'Email. ';
             camposInsuficientesCliente = true;
         }
         if (clienteTelefono == ''){
-            mensajeErrorCliente += "Teléfono. ";
+            mensajeErrorCliente += 'Teléfono. ';
             camposInsuficientesCliente = true;
         }
         if (camposInsuficientesCliente){
@@ -183,52 +183,52 @@ addEventListener("DOMContentLoaded", (event) => {
         console.log(clienteApellidos);
          clienteApellidos;
         const nuevoCliente = new Cliente(clienteNombre, clienteApellidos, clienteEmail, clienteTelefono);
-        const tablaClientes = document.getElementById("tabla-clientes");
+        const tablaClientes = document.getElementById('tabla-clientes');
         
-        const nuevaFilaCliente = document.createElement("tr");
+        const nuevaFilaCliente = document.createElement('tr');
         nuevaFilaCliente.innerHTML = `<td class='td-cliente-nombre'>${nuevoCliente.nombre}</td>
         <td>${nuevoCliente.apellido}</td>
         <td>${nuevoCliente.email}</td>
         <td>${nuevoCliente.telefono}</td>
         <td>
-            <button class="btn btn-danger btn-sm" onclick="eliminarCliente('${nuevoCliente.nombre}', '${nuevoCliente.apellido}')">Eliminar</button>
+            <button class='btn btn-danger btn-sm' onclick="eliminarCliente('${nuevoCliente.nombre}', '${nuevoCliente.apellido}')">Eliminar</button>
         </td>`;
         tablaClientes.appendChild(nuevaFilaCliente);
 
         añadirClienteLocalStorage(nuevoCliente);
 
         // Restablecemos los inputs
-        document.getElementById("cliente-nombre").value = '';
-        document.getElementById("cliente-apellidos").value = '';
-        document.getElementById("cliente-email").value = '';
-        document.getElementById("cliente-telefono").value = '';
+        document.getElementById('cliente-nombre').value = '';
+        document.getElementById('cliente-apellidos').value = '';
+        document.getElementById('cliente-email').value = '';
+        document.getElementById('cliente-telefono').value = '';
 
         actualizarSelectorCliente();
     }
 
     function añadirViaje() {
-        const viajesCodigo = document.getElementById("viajes-codigo").value;
-        const viajesDestino = document.getElementById("viajes-destino").value;
-        const viajesPrecio = document.getElementById("viajes-precio").value;
-        const selViajesTipo = document.getElementById("sel-viajes-tipo");
+        const viajesCodigo = document.getElementById('viajes-codigo').value;
+        const viajesDestino = document.getElementById('viajes-destino').value;
+        const viajesPrecio = document.getElementById('viajes-precio').value;
+        const selViajesTipo = document.getElementById('sel-viajes-tipo');
         const optViajesTipo = selViajesTipo.options[selViajesTipo.selectedIndex].text;
 
         let mensajeErrorViaje = 'Los siguientes campos no pueden estar vacíos: ';
         let camposInsuficientesViaje = false;
         if (viajesCodigo == ''){
-            mensajeErrorViaje += "Código. ";
+            mensajeErrorViaje += 'Código. ';
             camposInsuficientesViaje = true;
         }
         if (viajesDestino == ''){
-            mensajeErrorViaje += "Destino. ";
+            mensajeErrorViaje += 'Destino. ';
             camposInsuficientesViaje = true;
         }
         if (viajesPrecio == ''){
-            mensajeErrorViaje += "Precio. ";
+            mensajeErrorViaje += 'Precio. ';
             camposInsuficientesViaje = true;
         }
         if (optViajesTipo == 'Tipos de viajes'){
-            mensajeErrorViaje += "Tipo. ";
+            mensajeErrorViaje += 'Tipo. ';
             camposInsuficientesViaje = true;
         }
         if (camposInsuficientesViaje){
@@ -237,43 +237,43 @@ addEventListener("DOMContentLoaded", (event) => {
         }
 
         const nuevoViaje = new Viaje(viajesCodigo, viajesDestino, viajesPrecio, optViajesTipo);
-        const tablaViajes = document.getElementById("tabla-viajes");
+        const tablaViajes = document.getElementById('tabla-viajes');
         
-        const nuevaFilaViaje = document.createElement("tr");
+        const nuevaFilaViaje = document.createElement('tr');
         nuevaFilaViaje.innerHTML = `<td>${nuevoViaje.codigo}</td>
         <td>${nuevoViaje.destino}</td>
         <td>${nuevoViaje.precio}</td>
         <td>${optViajesTipo}</td>
         <td>
-            <button class="btn btn-danger btn-sm" onclick="eliminarViaje('${nuevoViaje.codigo}')">Eliminar</button>
+            <button class='btn btn-danger btn-sm' onclick="eliminarViaje('${nuevoViaje.codigo}')">Eliminar</button>
         </td>`;
         tablaViajes.appendChild(nuevaFilaViaje);
 
         añadirViajeLocalStorage(nuevoViaje);
 
         // Restablecemos los inputs
-        document.getElementById("viajes-codigo").value = '';
-        document.getElementById("viajes-destino").value = '';
-        document.getElementById("viajes-precio").value = '';
-        document.getElementById("sel-viajes-tipo").value = '';
+        document.getElementById('viajes-codigo').value = '';
+        document.getElementById('viajes-destino').value = '';
+        document.getElementById('viajes-precio').value = '';
+        document.getElementById('sel-viajes-tipo').value = '';
 
         actualizarSelectorViaje();
     }
 
     function añadirReserva() {
-        const selReservaCliente = document.getElementById("sel-reserva-cliente");
+        const selReservaCliente = document.getElementById('sel-reserva-cliente');
         const optReservaCliente = selReservaCliente.options[selReservaCliente.selectedIndex].text;
-        const selReservaViaje = document.getElementById("sel-reserva-viaje");
+        const selReservaViaje = document.getElementById('sel-reserva-viaje');
         const optReservaViaje = selReservaViaje.options[selReservaViaje.selectedIndex].text;
 
         let mensajeErrorReserva = 'Falta por seleccionar: ';
         let camposInsuficientesReserva = false;
         if (optReservaCliente == 'Seleccionar Cliente'){
-            mensajeErrorReserva += "Cliente. ";
+            mensajeErrorReserva += 'Cliente. ';
             camposInsuficientesReserva = true;
         }
         if (optReservaViaje == 'Seleccionar Viaje'){
-            mensajeErrorReserva += "Reserva. ";
+            mensajeErrorReserva += 'Reserva. ';
             camposInsuficientesReserva = true;
         }
         if (camposInsuficientesReserva){
@@ -282,21 +282,21 @@ addEventListener("DOMContentLoaded", (event) => {
         }
 
         const nuevaReserva = new Reserva(optReservaCliente, optReservaViaje);
-        const tablaReservas = document.getElementById("tabla-reservas");
+        const tablaReservas = document.getElementById('tabla-reservas');
         
-        const nuevaFilaReserva = document.createElement("tr");
+        const nuevaFilaReserva = document.createElement('tr');
         nuevaFilaReserva.innerHTML = `<td>${nuevaReserva.cliente}</td>
         <td>${nuevaReserva.viaje}</td>
         <td>
-            <button class="btn btn-danger btn-sm" onclick="eliminarReserva('${nuevaReserva.cliente}', '${nuevaReserva.viaje}')">Eliminar</button>
+            <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${nuevaReserva.cliente}', '${nuevaReserva.viaje}')">Eliminar</button>
         </td>`;
         tablaReservas.appendChild(nuevaFilaReserva);
 
         añadirReservaLocalStorage(nuevaReserva);
 
         // Restablecemos los inputs
-        document.getElementById("sel-reserva-cliente").value = 'Seleccionar Cliente';
-        document.getElementById("sel-reserva-viaje").value = 'Seleccionar Viaje';
+        document.getElementById('sel-reserva-cliente').value = 'Seleccionar Cliente';
+        document.getElementById('sel-reserva-viaje').value = 'Seleccionar Viaje';
     }
 
     // Cada vez que añadimos un cliente, viaje o reserva llamamos a su función respectiva y lo almacenamos en el local storage en forma de JSON
@@ -366,13 +366,13 @@ addEventListener("DOMContentLoaded", (event) => {
         selReservaCliente.innerHTML = ''; 
         const opcionPredeterminadaCliente = new Option('Seleccionar Cliente');
         selReservaCliente.add(opcionPredeterminadaCliente);
-        const tablaClientes = document.getElementById("tabla-clientes");
-        const filasCliente = tablaClientes.getElementsByTagName("tr");
+        const tablaClientes = document.getElementById('tabla-clientes');
+        const filasCliente = tablaClientes.getElementsByTagName('tr');
 
         
     
         for (let i = 0; i < filasCliente.length; i++) {
-            const nombresClientes = filasCliente[i].getElementsByTagName("td");
+            const nombresClientes = filasCliente[i].getElementsByTagName('td');
             if (nombresClientes.length > 0) {
                 
                 const nombre = nombresClientes[0].innerText;
@@ -390,11 +390,11 @@ addEventListener("DOMContentLoaded", (event) => {
         const opcionPredeterminadaViaje = new Option('Seleccionar Viaje');
         selReservaViaje.add(opcionPredeterminadaViaje); 
     
-        const tablaViajes = document.getElementById("tabla-viajes");
-        const filasViaje = tablaViajes.getElementsByTagName("tr");
+        const tablaViajes = document.getElementById('tabla-viajes');
+        const filasViaje = tablaViajes.getElementsByTagName('tr');
     
         for (let i = 0; i < filasViaje.length; i++) {
-            const columnasViaje = filasViaje[i].getElementsByTagName("td");
+            const columnasViaje = filasViaje[i].getElementsByTagName('td');
             if (columnasViaje.length > 0) {
                 const destino = columnasViaje[1].innerText; 
                 const opcionViaje = new Option(`${destino}`); 
