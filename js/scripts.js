@@ -1,10 +1,10 @@
 addEventListener('DOMContentLoaded', (event) => {
     class Viaje {
-        constructor(codigo, destino, precio, disponibilidad = true) {
+        constructor(codigo, destino, precio, tipo) {
             this.codigo = codigo;
             this.destino = destino;
             this.precio = precio;
-            this.disponibilidad = disponibilidad;
+            this.tipo = tipo;
         }
         getInfo() {
             return `Viaje [${this.codigo}] a ${this.destino}, precio: ${this.precio} euros`;
@@ -13,7 +13,7 @@ addEventListener('DOMContentLoaded', (event) => {
 
     class Vuelo extends Viaje{
         constructor(codigo, destino, precio, aerolinea, duracion) {
-            super(codigo, destino, precio);
+            super(codigo, destino, precio, 'Vuelo');
             this.aerolinea = aerolinea;
             this.duracion = duracion;
         }
@@ -24,7 +24,7 @@ addEventListener('DOMContentLoaded', (event) => {
 
     class Hotel extends Viaje{
         constructor(codigo, destino, precio, estrellas, tipoHabitacion) {
-            super(codigo, destino, precio);
+            super(codigo, destino, precio, 'Hotel');
             this.estrellas = estrellas;
             this.tipoHabitacion = tipoHabitacion;
         }
@@ -35,7 +35,7 @@ addEventListener('DOMContentLoaded', (event) => {
 
     class Paquete extends Viaje{
         constructor(codigo, destino, precio, vuelo, hotel) {
-            super(codigo, destino, precio);
+            super(codigo, destino, precio, 'Paquete');
             this.vuelo = vuelo;
             this.hotel = hotel;
         }
@@ -57,9 +57,10 @@ addEventListener('DOMContentLoaded', (event) => {
     }
 
     class Reserva{
-        constructor(cliente, viaje) {
+        constructor(cliente, viaje, fecha) {
             this.cliente = cliente;
             this.viaje = viaje;
+            this.fecha = fecha;
         }
         getResumen() {
             return `${this.cliente.getResumen()}\nReservó: ${this.viaje.getInfo()}`;
@@ -98,6 +99,39 @@ addEventListener('DOMContentLoaded', (event) => {
         añadirReserva();
     });
 
+    // Las funciones de eliminación, al no ser llamadas de forma directa se declaran como variables
+    eliminarCliente = function(nombre, apellido) {
+        let clientes = JSON.parse(localStorage.getItem('clientes'));
+        if (clientes === null){
+            clientes = [];
+        }
+        clientes = clientes.filter(cliente => cliente.nombre !== nombre || cliente.apellido !== apellido);
+        localStorage.setItem('clientes', JSON.stringify(clientes));
+        cargarLocalStorage(); 
+        actualizarSelectorCliente(); 
+    };
+
+    eliminarViaje = function(codigo) {
+        let viajes = JSON.parse(localStorage.getItem('viajes'));
+        if (viajes === null){
+            viajes = [];
+        }
+        viajes = viajes.filter(viaje => viaje.codigo !== codigo);
+        localStorage.setItem('viajes', JSON.stringify(viajes));
+        cargarLocalStorage(); 
+        actualizarSelectorViaje(); 
+    };
+
+    eliminarReserva = function(cliente, viaje) {
+        let reservas = JSON.parse(localStorage.getItem('reservas'));
+        if (reservas === null){
+            reservas = [];
+        }
+        reservas = reservas.filter(reserva => reserva.cliente !== cliente || reserva.viaje !== viaje);
+        localStorage.setItem('reservas', JSON.stringify(reservas));
+        cargarLocalStorage(); 
+    };
+
     function cargarLocalStorage() {
         // Aquí cargamos el LocalStorage como un JSON y con un forEach recorremos cada instancia y la introducimos en su tabla
         let clientes = JSON.parse(localStorage.getItem('clientes'));
@@ -129,7 +163,7 @@ addEventListener('DOMContentLoaded', (event) => {
             nuevaFilaViaje.innerHTML = `<td>${viaje.codigo}</td>
             <td>${viaje.destino}</td>
             <td>${viaje.precio}</td>
-            <td>${viaje.disponibilidad}</td>
+            <td>${viaje.tipo}</td>
             <td>
                 <button class='btn btn-danger btn-sm' onclick="eliminarViaje('${viaje.codigo}')">Eliminar</button>
             </td>`;
@@ -146,8 +180,9 @@ addEventListener('DOMContentLoaded', (event) => {
             const nuevaFilaReserva = document.createElement('tr');
             nuevaFilaReserva.innerHTML = `<td>${reserva.cliente}</td>
             <td>${reserva.viaje}</td>
+            <td>${reserva.fecha}</td>
             <td>
-                <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${reserva.cliente}', '${reserva.viaje}')">Eliminar</button>
+                <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${reserva.cliente}', '${reserva.viaje}', '${reserva.fecha}')">Eliminar</button>
             </td>`;
             tablaReservas.appendChild(nuevaFilaReserva);
         });
@@ -265,35 +300,32 @@ addEventListener('DOMContentLoaded', (event) => {
         const optReservaCliente = selReservaCliente.options[selReservaCliente.selectedIndex].text;
         const selReservaViaje = document.getElementById('sel-reserva-viaje');
         const optReservaViaje = selReservaViaje.options[selReservaViaje.selectedIndex].text;
-
+        const fechaActual = new Date().toJSON().slice(0, 10); 
         let mensajeErrorReserva = 'Falta por seleccionar: ';
         let camposInsuficientesReserva = false;
-        if (optReservaCliente == 'Seleccionar Cliente'){
+        if (optReservaCliente == 'Seleccionar Cliente') {
             mensajeErrorReserva += 'Cliente. ';
             camposInsuficientesReserva = true;
         }
-        if (optReservaViaje == 'Seleccionar Viaje'){
+        if (optReservaViaje == 'Seleccionar Viaje') {
             mensajeErrorReserva += 'Reserva. ';
             camposInsuficientesReserva = true;
         }
-        if (camposInsuficientesReserva){
+        if (camposInsuficientesReserva) {
             alert(mensajeErrorReserva);
             return; 
         }
-
-        const nuevaReserva = new Reserva(optReservaCliente, optReservaViaje);
+        const nuevaReserva = new Reserva(optReservaCliente, optReservaViaje, fechaActual); // Pass fechaActual
         const tablaReservas = document.getElementById('tabla-reservas');
-        
         const nuevaFilaReserva = document.createElement('tr');
         nuevaFilaReserva.innerHTML = `<td>${nuevaReserva.cliente}</td>
         <td>${nuevaReserva.viaje}</td>
+        <td>${nuevaReserva.fecha}</td> <!-- Use nuevaReserva.fecha -->
         <td>
             <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${nuevaReserva.cliente}', '${nuevaReserva.viaje}')">Eliminar</button>
         </td>`;
         tablaReservas.appendChild(nuevaFilaReserva);
-
         añadirReservaLocalStorage(nuevaReserva);
-
         // Restablecemos los inputs
         document.getElementById('sel-reserva-cliente').value = 'Seleccionar Cliente';
         document.getElementById('sel-reserva-viaje').value = 'Seleccionar Viaje';
@@ -328,38 +360,6 @@ addEventListener('DOMContentLoaded', (event) => {
         localStorage.setItem('reservas', JSON.stringify(reservas));
     }
     
-    window.eliminarCliente = function(nombre, apellido) {
-        let clientes = JSON.parse(localStorage.getItem('clientes'));
-        if (clientes === null){
-            clientes = [];
-        }
-        clientes = clientes.filter(cliente => cliente.nombre !== nombre || cliente.apellido !== apellido);
-        localStorage.setItem('clientes', JSON.stringify(clientes));
-        cargarLocalStorage(); 
-        actualizarSelectorCliente(); 
-    };
-
-    window.eliminarViaje = function(codigo) {
-        let viajes = JSON.parse(localStorage.getItem('viajes'));
-        if (viajes === null){
-            viajes = [];
-        }
-        viajes = viajes.filter(viaje => viaje.codigo !== codigo);
-        localStorage.setItem('viajes', JSON.stringify(viajes));
-        cargarLocalStorage(); 
-        actualizarSelectorViaje(); 
-    };
-
-    window.eliminarReserva = function(cliente, viaje) {
-        let reservas = JSON.parse(localStorage.getItem('reservas'));
-        if (reservas === null){
-            reservas = [];
-        }
-        reservas = reservas.filter(reserva => reserva.cliente !== cliente || reserva.viaje !== viaje);
-        localStorage.setItem('reservas', JSON.stringify(reservas));
-        cargarLocalStorage(); 
-    };
-
     // Los selectores para crear reservas se actualizan dinámicamente cada vez que se crea un nuevo cliente o viaje
     function actualizarSelectorCliente() {
         const selReservaCliente = document.getElementById('sel-reserva-cliente');
