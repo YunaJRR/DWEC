@@ -315,7 +315,7 @@ addEventListener('DOMContentLoaded', (event) => {
             alert(mensajeErrorReserva);
             return; 
         }
-        const nuevaReserva = new Reserva(optReservaCliente, optReservaViaje, fechaActual); // Pass fechaActual
+        const nuevaReserva = new Reserva(optReservaCliente, optReservaViaje, fechaActual); 
         const tablaReservas = document.getElementById('tabla-reservas');
         const nuevaFilaReserva = document.createElement('tr');
         nuevaFilaReserva.innerHTML = `<td>${nuevaReserva.cliente}</td>
@@ -326,7 +326,7 @@ addEventListener('DOMContentLoaded', (event) => {
         </td>`;
         tablaReservas.appendChild(nuevaFilaReserva);
         añadirReservaLocalStorage(nuevaReserva);
-        // Restablecemos los inputs
+        // Restablecemos los selectores
         document.getElementById('sel-reserva-cliente').value = 'Seleccionar Cliente';
         document.getElementById('sel-reserva-viaje').value = 'Seleccionar Viaje';
     }
