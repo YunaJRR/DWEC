@@ -80,6 +80,8 @@ console.log("Ejercicio 4: Análisis de palabras");
 
 console.log("1. Crea un array con una lista de palabras (puedes inventarlas).");
 const palabras = ["Servilleta", "Vidrio", "Estallar", "Corto", "Mal"];
+console.log(palabras);
+
 
 console.log("2. Usa filter para encontrar las palabras que tienen más de 5 letras.");
 const palabrasMasCincoLetras = palabras.filter(palabra => palabra.length > 5);
@@ -157,7 +159,7 @@ console.log(minimo);
 
 console.log("4. Calcula la cantidad de números impares usando filter.");
 const impares = numerosAleatorios.filter(num => num % 2 !== 0);
-console.log(impares);
+console.log(impares.length);
 
 
 
