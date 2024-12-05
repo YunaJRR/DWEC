@@ -215,8 +215,6 @@ addEventListener('DOMContentLoaded', (event) => {
             alert(mensajeErrorCliente);
             return; 
         }
-        console.log(clienteApellidos);
-         clienteApellidos;
         const nuevoCliente = new Cliente(clienteNombre, clienteApellidos, clienteEmail, clienteTelefono);
         const tablaClientes = document.getElementById('tabla-clientes');
         
