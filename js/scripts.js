@@ -101,8 +101,19 @@ addEventListener('DOMContentLoaded', (event) => {
 
     // Las funciones de eliminación, al no ser llamadas de forma directa se declaran como variables
     eliminarCliente = function(nombre, apellido) {
+        let reservas = JSON.parse(localStorage.getItem('reservas'));
+        if (reservas === null) {
+            reservas = [];
+        }
+        const existeReservaCliente = reservas.some(reserva => reserva.cliente === `${nombre} ${apellido}`);
+        
+        if (existeReservaCliente) {
+            alert(`No se puede eliminar al cliente ${nombre} ${apellido} porque tiene reservas asociadas.`);
+            return;
+        }
+    
         let clientes = JSON.parse(localStorage.getItem('clientes'));
-        if (clientes === null){
+        if (clientes === null) {
             clientes = [];
         }
         clientes = clientes.filter(cliente => cliente.nombre !== nombre || cliente.apellido !== apellido);
@@ -110,10 +121,21 @@ addEventListener('DOMContentLoaded', (event) => {
         cargarLocalStorage(); 
         actualizarSelectorCliente(); 
     };
-
+    
     eliminarViaje = function(codigo) {
+        let reservas = JSON.parse(localStorage.getItem('reservas'));
+        if (reservas === null) {
+            reservas = [];
+        }
+        const existeReservaViaje = reservas.some(reserva => reserva.viaje === codigo);
+        
+        if (existeReservaViaje) {
+            alert(`No se puede eliminar el viaje con código ${codigo} porque tiene reservas asociadas.`);
+            return;
+        }
+    
         let viajes = JSON.parse(localStorage.getItem('viajes'));
-        if (viajes === null){
+        if (viajes === null) {
             viajes = [];
         }
         viajes = viajes.filter(viaje => viaje.codigo !== codigo);
@@ -135,57 +157,75 @@ addEventListener('DOMContentLoaded', (event) => {
     function cargarLocalStorage() {
         // Aquí cargamos el LocalStorage como un JSON y con un forEach recorremos cada instancia y la introducimos en su tabla
         let clientes = JSON.parse(localStorage.getItem('clientes'));
-        if (clientes === null){
+        if (clientes === null) {
             clientes = [];
         }
         const tablaClientes = document.getElementById('tabla-clientes');
+        const mensajeClientes = document.getElementById('mensaje-clientes');
         tablaClientes.innerHTML = '';
-        clientes.forEach(cliente => {
-            const nuevaFilaCliente = document.createElement('tr');
-            nuevaFilaCliente.innerHTML = `<td class='td-cliente-nombre'>${cliente.nombre}</td>
-            <td>${cliente.apellido}</td>
-            <td>${cliente.email}</td>
-            <td>${cliente.telefono}</td>
-            <td>
-                <button class='btn btn-danger btn-sm' onclick="eliminarCliente('${cliente.nombre}', '${cliente.apellido}')">Eliminar</button>
-            </td>`;
-            tablaClientes.appendChild(nuevaFilaCliente);
-        });
-
+        if (clientes.length === 0) {
+            mensajeClientes.style.display = 'block'; 
+        } else {
+            mensajeClientes.style.display = 'none'; 
+            clientes.forEach(cliente => {
+                const nuevaFilaCliente = document.createElement('tr');
+                nuevaFilaCliente.innerHTML = `<td class='td-cliente-nombre'>${cliente.nombre}</td>
+                <td>${cliente.apellido}</td>
+                <td>${cliente.email}</td>
+                <td>${cliente.telefono}</td>
+                <td>
+                    <button class='btn btn-danger btn-sm' onclick="eliminarCliente('${cliente.nombre}', '${cliente.apellido}')">Eliminar</button>
+                </td>`;
+                tablaClientes.appendChild(nuevaFilaCliente);
+            });
+        }
+    
         let viajes = JSON.parse(localStorage.getItem('viajes'));
-        if (viajes === null){
+        if (viajes === null) {
             viajes = [];
         }
         const tablaViajes = document.getElementById('tabla-viajes');
+        const mensajeViajes = document.getElementById('mensaje-viajes');
         tablaViajes.innerHTML = '';
-        viajes.forEach(viaje => {
-            const nuevaFilaViaje = document.createElement('tr');
-            nuevaFilaViaje.innerHTML = `<td>${viaje.codigo}</td>
-            <td>${viaje.destino}</td>
-            <td>${viaje.precio}</td>
-            <td>${viaje.tipo}</td>
-            <td>
-                <button class='btn btn-danger btn-sm' onclick="eliminarViaje('${viaje.codigo}')">Eliminar</button>
-            </td>`;
-            tablaViajes.appendChild(nuevaFilaViaje);
-        });
-
+        if (viajes.length === 0) {
+            mensajeViajes.style.display = 'block'; 
+        } else {
+            mensajeViajes.style.display = 'none';
+            viajes.forEach(viaje => {
+                const nuevaFilaViaje = document.createElement('tr');
+                nuevaFilaViaje.innerHTML = `<td>${viaje.codigo}</td>
+                <td>${viaje.destino}</td>
+                <td>${viaje.precio}</td>
+                <td>${viaje.tipo}</td>
+                <td>
+                    <button class='btn btn-danger btn-sm' onclick="eliminarViaje('${viaje.codigo}')">Eliminar</button>
+                </td>`;
+                tablaViajes.appendChild(nuevaFilaViaje);
+            });
+        }
+    
         let reservas = JSON.parse(localStorage.getItem('reservas'));
-        if (reservas === null){
+        if (reservas === null) {
             reservas = [];
         }
         const tablaReservas = document.getElementById('tabla-reservas');
+        const mensajeReservas = document.getElementById('mensaje-reservas');
         tablaReservas.innerHTML = '';
-        reservas.forEach(reserva => {
-            const nuevaFilaReserva = document.createElement('tr');
-            nuevaFilaReserva.innerHTML = `<td>${reserva.cliente}</td>
-            <td>${reserva.viaje}</td>
-            <td>${reserva.fecha}</td>
-            <td>
-                <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${reserva.cliente}', '${reserva.viaje}', '${reserva.fecha}')">Eliminar</button>
-            </td>`;
-            tablaReservas.appendChild(nuevaFilaReserva);
-        });
+        if (reservas.length === 0) {
+            mensajeReservas.style.display = 'block';
+        } else {
+            mensajeReservas.style.display = 'none';
+            reservas.forEach(reserva => {
+                const nuevaFilaReserva = document.createElement('tr');
+                nuevaFilaReserva.innerHTML = `<td>${reserva.cliente}</td>
+                <td>${reserva.viaje}</td>
+                <td>${reserva.fecha}</td>
+                <td>
+                    <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${reserva.cliente}', '${reserva.viaje}')">Eliminar</button>
+                </td>`;
+                tablaReservas.appendChild(nuevaFilaReserva);
+            });
+        }
     }
 
     function añadirCliente() {
@@ -237,6 +277,7 @@ addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('cliente-telefono').value = '';
 
         actualizarSelectorCliente();
+        cargarLocalStorage(); 
     }
 
     function añadirViaje() {
@@ -291,6 +332,7 @@ addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('sel-viajes-tipo').value = '';
 
         actualizarSelectorViaje();
+        cargarLocalStorage(); 
     }
 
     function añadirReserva() {
@@ -318,15 +360,16 @@ addEventListener('DOMContentLoaded', (event) => {
         const nuevaFilaReserva = document.createElement('tr');
         nuevaFilaReserva.innerHTML = `<td>${nuevaReserva.cliente}</td>
         <td>${nuevaReserva.viaje}</td>
-        <td>${nuevaReserva.fecha}</td> <!-- Use nuevaReserva.fecha -->
+        <td>${nuevaReserva.fecha}</td> 
         <td>
             <button class='btn btn-danger btn-sm' onclick="eliminarReserva('${nuevaReserva.cliente}', '${nuevaReserva.viaje}')">Eliminar</button>
         </td>`;
         tablaReservas.appendChild(nuevaFilaReserva);
         añadirReservaLocalStorage(nuevaReserva);
-        // Restablecemos los selectores
+        
         document.getElementById('sel-reserva-cliente').value = 'Seleccionar Cliente';
         document.getElementById('sel-reserva-viaje').value = 'Seleccionar Viaje';
+        cargarLocalStorage(); 
     }
 
     // Cada vez que añadimos un cliente, viaje o reserva llamamos a su función respectiva y lo almacenamos en el local storage en forma de JSON
