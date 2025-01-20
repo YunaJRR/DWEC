@@ -74,13 +74,13 @@ $(document).ready(function() {
         const indexUsuario = usuarios.findIndex(usuario => usuario.Email === email);
     
         if (indexUsuario === -1) {
-            alert("Email incorrecto");
+            alert("Datos Incorrectos");
             return;
         }
     
         const usuario = usuarios[indexUsuario];
         if (usuario.Contraseña !== contraseña) {
-            alert("Contraseña incorrecta.");
+            alert("Datos Incorrectos");
             return;
         }
         
@@ -91,12 +91,11 @@ $(document).ready(function() {
         this.reset(); 
         
     });
-    new DataTable('#usertable');
     function cargarUsuarios() {
         let usuarios = JSON.parse(localStorage.getItem("Usuarios")) || [];
         const tbody = $('#usertable tbody');
+
         tbody.empty();
-        console.log('hey');
         
         usuarios.forEach(usuario => {
             const row = `<tr>
@@ -105,30 +104,35 @@ $(document).ready(function() {
                         </tr>`;
             tbody.append(row);
         });
-    }
-    $('#userTable').DataTable({
-        language: {
-            processing: "Procesando...",
-            search: "Buscar:",
-            lengthMenu: "Mostrar _MENU_ registros",
-            info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-            infoFiltered: "(filtrado de un total de _MAX_ registros)",
-            loadingRecords: "Cargando...",
-            zeroRecords: "No se encontraron resultados",
-            emptyTable: "Ningún dato disponible en esta tabla",
-            paginate: {
-                first: "Primero",
-                previous: "Anterior",
-                next: "Siguiente",
-                last: "Último"
-            },
-            aria: {
-                sortAscending: ": Activar para ordenar la columna de manera ascendente",
-                sortDescending: ": Activar para ordenar la columna de manera descendente"
-            }
+        
+        if ($.fn.DataTable.isDataTable('#usertable')) {
+            $('#usertable').DataTable().destroy();
         }
-    });
+    
+        $('#usertable').DataTable({
+            language: {
+                processing: "Procesando...",
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ registros",
+                info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                infoFiltered: "(filtrado de un total de _MAX_ registros)",
+                loadingRecords: "Cargando...",
+                zeroRecords: "No se encontraron resultados",
+                emptyTable: "Ningún dato disponible en esta tabla",
+                paginate: {
+                    first: "Primero",
+                    previous: "Anterior",
+                    next: "Siguiente",
+                    last: "Último"
+                },
+                aria: {
+                    sortAscending: ": Activar para ordenar la columna de manera ascendente",
+                    sortDescending: ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+    }
     cargarUsuarios();
     
 });
