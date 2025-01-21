@@ -36,3 +36,10 @@ h5{
     font-size: 16px!important;
     font-weight: normal!important;
 }
+.container {
+    justify-content: center;
+
+}
+#usertable {
+    width: auto; 
+}

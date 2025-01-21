@@ -2,6 +2,7 @@ $(document).ready(function() {
     const validacionEmail = /^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim;
     const validacionContraseña = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&_-])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$/;
 
+
     $('#irInicioSesion').click(function() {
         mostrarLoginRegistro(1);
     });
@@ -9,7 +10,10 @@ $(document).ready(function() {
     $('#irRegistro').click(function() {
         mostrarLoginRegistro(2);
     });
-    
+    $('#btnCerrarSesion').click(function() {
+        cerrarSesion();
+    });
+
     function mostrarLoginRegistro(opcion) {
         const inicioSesion = $("#inicioSesion");
         const registro = $("#registro");
@@ -84,13 +88,14 @@ $(document).ready(function() {
             return;
         }
         
-        
-        
         window.location.href = "admin.html";
         
         this.reset(); 
         
     });
+    function cerrarSesion(){
+        window.location.replace('index.html');
+    }
     function cargarUsuarios() {
         let usuarios = JSON.parse(localStorage.getItem("Usuarios")) || [];
         const tbody = $('#usertable tbody');
@@ -132,7 +137,7 @@ $(document).ready(function() {
                 }
             }
         });
-    }
+    } 
     cargarUsuarios();
     
 });
